@@ -23,7 +23,8 @@ end
 @coverage_type = ENV['INPUT_TYPE']
 @report_path = ENV['INPUT_RESULT_PATH']
 @data = { min: ENV['INPUT_MIN_COVERAGE'] }
+@cov_per_file = ENV['INPUT_SHOW_COVERAGE_PER_FILE'] == 'true'
 
-@report = CoverageReport.generate(@coverage_type, @report_path, @data)
+@report = CoverageReport.generate(@coverage_type, @cov_per_file, @report_path, @data)
 
-GithubCheckRunService.new(@report, @github_data, ReportAdapter).run
+GithubCheckRunService.new(@report, @cov_per_file, @github_data, ReportAdapter).run

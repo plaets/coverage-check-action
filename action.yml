@@ -18,6 +18,10 @@ inputs:
   result_path:
     description: "Json with coverage result"
     required: true
+  show_coverage_per_file:
+    description: "Show coverage for every file"
+    required: false
+    default: false
 runs:
   using: "docker"
   image: "Dockerfile"

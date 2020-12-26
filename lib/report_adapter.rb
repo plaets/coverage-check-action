@@ -14,6 +14,15 @@ class ReportAdapter
       "**Coverage**:\n\n#{table_head}\n| Lines | #{lines_covered_percent(report)}%     | #{lines_minimum_percent(report)}%     |\n"
     end
 
+    def summary_per_file(report)
+      res = String.new ""
+      res << "\n\n#{per_file_table_head}\n"
+      for n in report['per_file']
+        res << "| #{n['file']} | #{n['lines']} | #{n['covered_lines']} | #{n['coverage']}% |\n"
+      end
+      res
+    end
+
     def annotations(_report)
       []
     end
@@ -26,6 +35,10 @@ class ReportAdapter
 
     def table_head
       "| Type  | covered | minimum |\n| ----- | ------- | ------- |"
+    end
+
+    def per_file_table_head()
+      "| File | lines | covered lines | coverage |\n| ---- | ----- | ------------- | -------- |"
     end
 
     def lines_minimum_percent(report)

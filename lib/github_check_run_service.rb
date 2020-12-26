@@ -3,8 +3,9 @@
 class GithubCheckRunService
   CHECK_NAME = 'Coverage'
 
-  def initialize(report, github_data, report_adapter)
+  def initialize(report, cov_per_file, github_data, report_adapter)
     @report = report
+    @cov_per_file = cov_per_file
     @github_data = github_data
     @report_adapter = report_adapter
     @client = GithubClient.new(@github_data[:token], user_agent: 'coverage-action')
@@ -15,10 +16,17 @@ class GithubCheckRunService
       endpoint_url,
       create_check_payload
     )['id']
+
     @summary = @report_adapter.summary(@report)
+    if @cov_per_file
+      @summary = @summary + @report_adapter.summary_per_file(@report)
+    end
+
     @annotations = @report_adapter.annotations(@report)
     @conclusion = @report_adapter.conslusion(@report)
     @percent = @report_adapter.lines_covered_percent(@report)
+
+    print @summary
 
     @client.patch(
       "#{endpoint_url}/#{id}",
